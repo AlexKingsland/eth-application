@@ -67,6 +67,22 @@ App = {
 		  App.setLoading(false);
 	  },
 
+	  createTask: async () => {
+		  App.setLoading(true)
+		  const _content = $("#newTask").val()
+		  await App.todolistContract.createTask(_content, {from: App.account})
+		  window.location.reload()
+		  App.setLoading(false)
+	  },
+
+	  toggleCompleted: async (eventHandle) => {
+		App.setLoading(true)
+		_id = eventHandle.target.id
+		await App.todolistContract.toggleCompleted(_id, {from: App.account})
+		window.location.reload()
+		App.setLoading(false)
+	  },
+
 	  renderTasks: async () => {
 		// Load the total task count from the blockchain
 		const taskCount = await App.todolistContract.taskCount()
@@ -84,7 +100,7 @@ App = {
 			const $newTaskTemplate = $taskTemplate.clone()
 			$newTaskTemplate.find('.text').html(taskText)
 			$newTaskTemplate.find('input')
-							.prop('name', taskId)
+							.prop('id', taskId)
 							.prop('checked', taskCompleted)
 							.on('click', App.toggleCompleted)
 	  
